@@ -31,13 +31,13 @@ class Environments(Enum):
 
 
 class Config:
-    ENV = 'development'
+    ENV = os.environ.get('FLASK_ENV', 'development')
     DEBUG = False
     # TODO: create default logging configurations here
     LOG_CFG_FILE = '../configs/logging.yaml'
     LOG_TYPE = os.environ.get("LOG_TYPE", "watched")
     LOG_LEVEL = os.environ.get("LOG_LEVEL", "DEBUG")
-    APP_NAME = os.environ.get('APP_NAME', 'CCAPI')
+    APP_NAME = os.environ.get('APP_NAME', 'MEMORIS')
     REFRESH_EXP_LENGTH = 30
     ACCESS_EXP_LENGTH = 10
     JWT_SECRET_KEY = 'this_is_not_set_yet'

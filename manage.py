@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 # app = create_app(Environments.DEVELOPMENT.value)
 logging.info("FASK_CONFIG from The Environment: {} ".format(os.getenv('FLASK_CONFIG')))
-app = create_app(os.getenv('FLASK_CONFIG') or default_config)
+app = create_app(os.getenv('FLASK_ENV') or default_config)
 migrate = Migrate(app, db)
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)

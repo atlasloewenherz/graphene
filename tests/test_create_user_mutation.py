@@ -12,12 +12,13 @@ import faker
 import graphene
 logging.getLogger(faker.__name__).setLevel(logging.ERROR)
 logging.getLogger(graphene.__name__).setLevel(logging.ERROR)
+
 #logger.info(test_schema)
 
 
 create_user_mutation_ql ='''
 mutation myCreateUser {
-  user(user_data: {
+  user(data: {
       username: "test", 
       email: "test@test.cz", 
       password: "479332973"
@@ -60,4 +61,4 @@ def test_create_user_mutation():
     client = Client(test_schema)
     executed = client.execute(create_user_mutation_ql)
     logger.debug(executed)
-    assert executed == {'data': OrderedDict([('user', None)])}
+    assert executed is not None

@@ -1,6 +1,7 @@
 import importlib
 import logging
 import os
+from abc import abstractmethod
 from inspect import getmembers, isclass
 from pathlib import Path
 
@@ -8,15 +9,24 @@ import graphene
 
 logger = logging.getLogger(__name__)
 
-
 class BaseQuery(graphene.ObjectType):
     node = graphene.relay.Node.Field()
     pass
 
-class BaseMutation(graphene.ObjectType):
-    pass
+class BaseMutation(graphene.Mutation):
+    class Meta:
+        abstract = True
+    @property
+    @abstractmethod
+    def mutation_name(self):
+        pass
 
 class BaseSubscription(graphene.ObjectType):
+    @property
+    @abstractmethod
+    def subscription_name(self):
+        pass
+
     pass
 
 class OperationAbstract(graphene.ObjectType):
@@ -107,10 +117,15 @@ class SchemaBuilder:
             mutations_tuple = tuple(_mutations)
             Queries = type('Query', queries_tuple, _queries_properties)
             logger.debug("Queries Root class: {} Properties: {}".format(Queries.__name__, vars(Queries)))
+            logger.debug("Mutation name: {} FIELD: {}".format(_mutations[0].mutation_name, _mutations[0].Field()))
             #Mutations = type('Mutations', mutations_tuple, _mutations_properties)
-            Mutation = type('Mutation', mutations_tuple, {})
+
+            _mtuple = tuple([graphene.ObjectType,])
+
+            Mutation = type('Mutation', _mtuple, { _mutations[0].mutation_name: _mutations[0].Field(),})
+            logger.debug(type(Mutation))
             return graphene.Schema(query=Queries, mutation=Mutation)
-        except (RuntimeError, TypeError, NameError) as error:
+        except (RuntimeError, TypeError, NameError, Exception) as error:
             logging.error("ERROR: {}".format(error, ))
 
 

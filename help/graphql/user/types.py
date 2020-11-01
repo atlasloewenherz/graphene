@@ -23,3 +23,9 @@ class UserType(SQLAlchemyObjectType, UserAttribute):
     class Meta:
         model = UserModel
         #interfaces = (relay.Node,)
+
+
+class UserInputType(graphene.InputObjectType):
+    username = graphene.String(name='username', required=True)
+    password = graphene.String(name='password',required=True)
+    email = graphene.String(name='email', required=True)

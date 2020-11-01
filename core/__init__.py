@@ -76,7 +76,7 @@ def create_app(_config):
     # app.config_dict['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db' see configuration
     migrate = Migrate(app, db)
     with app.app_context():
-        #from modules.user.models import User
+        from help.graphql.user.models import User
         Session.configure(bind=db)
         db.create_all()
         from help.graphql import SchemaBuilder

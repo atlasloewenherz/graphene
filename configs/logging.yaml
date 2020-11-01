@@ -1,6 +1,8 @@
 ---
 version: 1
 disable_existing_loggers: False
+
+raiseExceptions: False
 formatters:
   simple:
     format: "%(asctime)s - %(name)s - %(threadName)s - %(levelname)s - %(message)s"
@@ -40,6 +42,5 @@ loggers:
     propagate: no
 
 root:
-  level: INFO
+  level: DEBUG
   handlers: [console]
-#  handlers: [console, info_file_handler, error_file_handler]
