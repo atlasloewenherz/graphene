@@ -62,7 +62,8 @@ class SchemaBuilder:
         for mutation_class in mutations:
             logger.debug("adding Mutation {0}".format(mutation_class))
             logger.debug("Adding properties {} of Query: {} to QueryProperties".format(mutation_class.__dict__, mutation_class.__name__))
-            self.mutations_properties.update(mutation_class.__dict__['_meta'].fields)
+            #self.mutations_properties.update(mutation_class.__dict__['_meta'].fields)
+            self.mutations_properties[mutation_class.mutation_name] = mutation_class.Field()
             self.mutations.append(mutation_class)
     """
     import either queries module ( query.py ) or mutations module (mutations.py) for the provided directory
@@ -91,8 +92,8 @@ class SchemaBuilder:
                     for query_ in queries_:
                         logger.debug(type(query_))
                         logger.debug("Class: {} in module: {}".format(query_.__name__,query_module ))    
-                        for field in query_.__dict__:
-                            logger.debug("\t Field: {} ".format(field,))
+                        #for field in query_.__dict__:
+                        #    logger.debug("\t Field: {} ".format(field,))
                     self.add_queries(queries_)
 
                 mutation_module = self.import_graphql_module(directory, "mutations")
@@ -101,8 +102,8 @@ class SchemaBuilder:
                     mutations_ = [x[1] for x in mclasses if (issubclass(x[1], BaseMutation) and x[1] != BaseMutation)]
                     for mutation_ in mutations_:
                         logger.debug("Class: {} in module: {}".format(mutation_.__name__,mutation_module ))    
-                        for field in mutation_.__dict__:
-                            logger.debug("\t Field: {} ".format(field,))
+                        #for field in mutation_.__dict__:
+                        #    logger.debug("\t Field: {} ".format(field,))
                     self.add_mutations(mutations_)
                 else:
                     logger.debug("Neither a Query not a Mutation module")
@@ -122,7 +123,7 @@ class SchemaBuilder:
 
             _mtuple = tuple([graphene.ObjectType,])
 
-            Mutation = type('Mutation', _mtuple, { _mutations[0].mutation_name: _mutations[0].Field(),})
+            Mutation = type('Mutation', _mtuple, self.mutations_properties)
             logger.debug(type(Mutation))
             return graphene.Schema(query=Queries, mutation=Mutation)
         except (RuntimeError, TypeError, NameError, Exception) as error:

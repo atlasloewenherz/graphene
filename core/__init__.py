@@ -83,7 +83,7 @@ def create_app(_config):
         sb = SchemaBuilder()
         schema = sb.build()
         if schema:
-            logger.debug(schema)
+            #ogger.debug(schema)
             app.add_url_rule(
              '/graphql',
              view_func=GraphQLView.as_view(
@@ -93,7 +93,7 @@ def create_app(_config):
              get_context=lambda: {'session':Session}
             )
             )
-        logger.info(schema)
+        #logger.info(schema)
        
     return app
 

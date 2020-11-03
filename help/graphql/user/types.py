@@ -11,6 +11,7 @@ class UserAttribute:
 
 
 
+
 class CreateUserType(graphene.ObjectType):
     username = graphene.String(description="Username of the User.")
     email = graphene.String(description="E-Mail of the User.")
@@ -19,13 +20,23 @@ class CreateUserType(graphene.ObjectType):
 
 
 
-class UserType(SQLAlchemyObjectType, UserAttribute):
+class UserType(SQLAlchemyObjectType):
     class Meta:
         model = UserModel
-        #interfaces = (relay.Node,)
+        exclude_fields = ['id']
+        interfaces = (graphene.relay.Node,)
 
 
-class UserInputType(graphene.InputObjectType):
+class RegisterUserInputType(graphene.InputObjectType):
     username = graphene.String(name='username', required=True)
     password = graphene.String(name='password',required=True)
     email = graphene.String(name='email', required=True)
+
+
+class CreateUserInputType(graphene.InputObjectType, UserAttribute):
+    username = graphene.String(name='username', required=True)
+    password = graphene.String(name='password',required=True)
+    email = graphene.String(name='email', required=True)
+
+class UpdateUserInputType(graphene.InputObjectType, UserAttribute):
+    pass
