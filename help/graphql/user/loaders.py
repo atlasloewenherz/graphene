@@ -10,3 +10,8 @@ def load_all_users(root, info):
     query = UserType.get_query(info)  # SQLAlchemy query
     return query.all()
 
+
+def load_all_users(self, context, **kwargs):
+    logger.debug(kwargs)
+    query = UserType.get_query(context)  # SQLAlchemy query
+    return query.all()

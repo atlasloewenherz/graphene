@@ -71,12 +71,14 @@ class SchemaBuilder:
     def import_graphql_module(self, directory, module_name):
         logging.debug("importing: {}.{}.{}".format(self.api_path, directory, module_name))
         try:
+
             base = ""
             if not self.api_path.rindex("/"):
                 base = self.api_path
             else:
                 base = self.api_path.replace("/", ".")
             module = importlib.import_module(f'{base}.{directory}.{module_name}')
+            logger.debug("query_module")
             return module
         except ModuleNotFoundError as error:
             logging.error("ERROR: {}".format(error,))
@@ -85,8 +87,10 @@ class SchemaBuilder:
         try:
             for directory in self.subdirectories:
                 #TODO resolve via App configuration
+                logger.debug("query_module")
                 query_module = self.import_graphql_module(directory, "queries")
                 if query_module:
+                    logger.debug(query_module)
                     qclasses = [x for x in getmembers(query_module, isclass)]# get all classes within the module
                     queries_ = [x[1] for x in qclasses if (issubclass(x[1], BaseQuery) and x[1] != BaseQuery)] # get only Queries as they inherit from 'BaseQuery'
                     for query_ in queries_:
